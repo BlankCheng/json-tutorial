@@ -7,6 +7,8 @@ typedef struct {
     lept_type type;
 }lept_value;
 
+
+/* return value type, indicating parsing success or failure */
 enum {
     LEPT_PARSE_OK = 0,
     LEPT_PARSE_EXPECT_VALUE,
