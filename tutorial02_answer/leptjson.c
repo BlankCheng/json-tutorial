@@ -33,10 +33,10 @@ static int lept_parse_literal(lept_context* c, lept_value* v, const char* litera
 static int lept_parse_number(lept_context* c, lept_value* v) {
     const char* p = c->json;
     if (*p == '-') p++;
-    if (*p == '0') p++;
+    if (*p == '0') p++; /* start with 0, init is important to avoid start with . or E etal. */
     else {
         if (!ISDIGIT1TO9(*p)) return LEPT_PARSE_INVALID_VALUE;
-        for (p++; ISDIGIT(*p); p++);
+        for (p++; ISDIGIT(*p); p++)  /* if *p is a alphabet or space, left to left_parse to determine. */
     }
     if (*p == '.') {
         p++;
