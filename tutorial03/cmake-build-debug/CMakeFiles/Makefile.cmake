@@ -48,5 +48,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/debug.dir/DependInfo.cmake"
+  "CMakeFiles/leptjson.dir/DependInfo.cmake"
+  "CMakeFiles/leptjson_test.dir/DependInfo.cmake"
   )
