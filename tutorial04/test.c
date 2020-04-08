@@ -268,6 +268,7 @@ static void test_access() {
     test_access_string();
 }
 
+
 int main() {
 #ifdef _WINDOWS
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -275,5 +276,15 @@ int main() {
     test_parse();
     test_access();
     printf("%d/%d (%3.2f%%) passed\n", test_pass, test_count, test_pass * 100.0 / test_count);
+    char *p = (char *) malloc(100);
+    char s[100] = "\xE2\x82\xAC";
+    char su[100];
+    su[0] = 0xE2;
+    su[1] = 0x82;
+    su[2] = 0xAC;
+    su[3] = '\0';
+    printf("%s\n", s);
+    printf("%s\n", su);
+    printf("%s", "≤Œ’’");
     return main_ret;
 }
