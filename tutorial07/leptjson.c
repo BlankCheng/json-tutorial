@@ -348,9 +348,49 @@ int lept_parse(lept_value* v, const char* json) {
 
 static void lept_stringify_string(lept_context* c, const char* s, size_t len) {
     /* ... */
+    size_t i;
+    char hex_digits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+    PUTC(c, '\"');
+    for (i = 0; i < len; i++) {
+        switch (s[i]) {
+            case '\"':
+                PUTC(c, '\\');
+                PUTC(c, '\"'); break;
+            case '\b':
+                PUTC(c, '\\');
+                PUTC(c, 'b'); break;
+            case '\r':
+                PUTC(c, '\\');
+                PUTC(c, 'r'); break;
+            case '\t':
+                PUTC(c, '\\');
+                PUTC(c, 't'); break;
+            case '\n':
+                PUTC(c, '\\');
+                PUTC(c, 'n'); break;
+            case '\f':
+                PUTC(c, '\\');
+                PUTC(c, 'f'); break;
+            case '\\':
+                PUTC(c, '\\');
+                PUTC(c, '\\'); break;
+            default:
+                if (s[i] < 0x20){
+                    PUTC(c, '\\');
+                    PUTC(c, 'u');
+                    PUTS(c, "00", 2);
+                    PUTC(c, hex_digits[s[i] >> 4]);
+                    PUTC(c, hex_digits[s[i] & 15]);
+                } else{
+                    PUTC(c, s[i]);
+                }
+        }
+    }
+    PUTC(c, '\"');
 }
 
 static void lept_stringify_value(lept_context* c, const lept_value* v) {
+    size_t i;
     switch (v->type) {
         case LEPT_NULL:   PUTS(c, "null",  4); break;
         case LEPT_FALSE:  PUTS(c, "false", 5); break;
@@ -358,10 +398,24 @@ static void lept_stringify_value(lept_context* c, const lept_value* v) {
         case LEPT_NUMBER: c->top -= 32 - sprintf(lept_context_push(c, 32), "%.17g", v->u.n); break;
         case LEPT_STRING: lept_stringify_string(c, v->u.s.s, v->u.s.len); break;
         case LEPT_ARRAY:
-            /* ... */
+            PUTC(c, '[');
+            for (i = 0; i < v->u.a.size; i++) {
+                lept_stringify_value(c, lept_get_array_element(v, i));
+                if (i == v->u.a.size - 1) break;
+                PUTC(c, ',');
+            }
+            PUTC(c, ']');
             break;
         case LEPT_OBJECT:
-            /* ... */
+            PUTC(c, '{');
+            for (i = 0; i < v->u.a.size; i++) {
+                lept_stringify_string(c, lept_get_object_key(v, i), lept_get_object_key_length(v, i));
+                PUTC(c, ':');
+                lept_stringify_value(c, lept_get_object_value(v, i));
+                if (i == v->u.a.size - 1) break;
+                PUTC(c, ',');
+            }
+            PUTC(c, '}');
             break;
         default: assert(0 && "invalid type");
     }
