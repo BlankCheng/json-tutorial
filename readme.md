@@ -7,7 +7,7 @@ This is a json parser tutorial forked from [leptjson](https://github.com/miloyip
 - [x] Chap2
 - [x] Chap3
 - [x] Chap4
-- [ ] Chap5
-- [ ] Chap6
-- [ ] Chap7
+- [x] Chap5
+- [x] Chap6
+- [x] Chap7
 - [ ] Chap8
