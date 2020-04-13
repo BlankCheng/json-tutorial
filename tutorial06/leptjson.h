@@ -44,6 +44,8 @@ enum {
 
 int lept_parse(lept_value* v, const char* json);
 
+void lept_free_member(lept_member* m);
+
 void lept_free(lept_value* v);
 
 lept_type lept_get_type(const lept_value* v);
